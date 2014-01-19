@@ -1,0 +1,24 @@
+<div id="viz_div" style="position:fixed; top:20px; left:10px">
+	<p>Put the visualization here</p>
+</div>
+<div id="table_div" style="height:100px; overflow=auto; position:absolute; top:80px;">
+	{% if all_minute_data %}
+		<table border="1">
+			<tr>
+				<th>Time</th>
+				<th>Value (db)</th>
+			</tr>
+			{% for objects in all_minute_data  %}
+				<tr>
+				<td>{{ objects.time }}</td>
+				<td>{{ objects.value }}</td>
+				</tr>
+			{% endfor %}
+		</table>
+	{% else %}
+		<p>There is no data to display, sorry.</p>
+	{% endif %}
+</div>
+<div id="form_div" style="position:absolute; top:20px; right:10px">
+	<p>Form</p>
+</div>
