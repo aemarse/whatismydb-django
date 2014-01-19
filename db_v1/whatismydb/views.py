@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_list_or_404
 
-from whatismydb.models import MinuteData, HourData, DayData, TimeIntervals
+from whatismydb.models import MinuteData, HourData, DayData, TimeIntervals, QueryData
 
 def home(request):
 	# Queryset for getting all objects, ordered by time
@@ -11,6 +11,13 @@ def home(request):
 
 	# Queryset for time intervals
 	time_interval_choices = TimeIntervals.time_interval_choices
+	# time_interval_choices = QueryData.time_intervals
+
+	# Start time
+	
+
+	# End time
+	
 
 	# Map template var name to Python obj
 	context = {'all_minute_data': all_minute_data,
@@ -18,3 +25,4 @@ def home(request):
 
 	# Render the page!
 	return render(request, 'whatismydb/home.html', context)
+

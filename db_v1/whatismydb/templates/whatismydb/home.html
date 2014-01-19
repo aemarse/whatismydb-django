@@ -1,6 +1,9 @@
+<div id="container">
+
 <div id="viz_div" style="position:fixed; top:20px; left:10px">
 	<p>Put the visualization here</p>
 </div>
+
 <div id="table_div" style="height:100px; overflow=auto; position:absolute; top:80px;">
 	{% if all_minute_data %}
 		<table border="1">
@@ -19,14 +22,34 @@
 		<p>There is no data to display, sorry.</p>
 	{% endif %}
 </div>
+
 <div id="form_div" style="position:absolute; top:20px; right:10px">
-	<p>Form</p>
 	<form action="{% url 'whatismydb:home' %}" method="get">
+	<fieldset>
+
+	<legend>Get Data</legend>
+	
 	{% csrf_token %}
+
+	<label><b>Start Date/Time</b></label><br />
+	<input type="text" name="start_date"><br /><br />
+
+	<label><b>End Date/Time</b></label><br />
+	<input type="text" name="end_date"><br /><br />
+	
+	<label><b>Update Rate</b></label><br />
 	{% for choice in choices %}
+
 		<input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ forloop.counter }}">
 		<label for="choice{{ forloop.counter }}">{{ choice }}</label><br />
+
 	{% endfor %}
+	<br />
+
 	<input type="submit" value="Update" />
+
+	</fieldset>
 	</form>
+</div>
+
 </div>
