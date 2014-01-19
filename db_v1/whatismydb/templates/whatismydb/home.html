@@ -21,4 +21,12 @@
 </div>
 <div id="form_div" style="position:absolute; top:20px; right:10px">
 	<p>Form</p>
+	<form action="{% url 'whatismydb:home' %}" method="get">
+	{% csrf_token %}
+	{% for choice in choices %}
+		<input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ forloop.counter }}">
+		<label for="choice{{ forloop.counter }}">{{ choice }}</label><br />
+	{% endfor %}
+	<input type="submit" value="Update" />
+	</form>
 </div>

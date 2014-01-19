@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms import ModelForm
 
 # Abstract base class for representing time+value in database
 class TimeValue(models.Model):
@@ -11,9 +12,6 @@ class TimeValue(models.Model):
 	def __unicode__(self):
 		return u'\nValue: %s \nTime: %s\n' % (self.value, self.time)
 
-	def save_object(self):
-		save()
-
 # Represents data collected every minute, subclass of TimeValue
 class MinuteData(TimeValue):
 	pass
@@ -25,3 +23,23 @@ class HourData(TimeValue):
 # Represents data collected every day, subclass of TimeValue
 class DayData(TimeValue):
 	pass
+
+class TimeIntervals(models.Model):
+	time_interval_choices = (
+	'Minute',
+	'Hour',
+	'Day',
+	)
+
+# Query choices for "get" form
+class QueryData(models.Model):
+	date_time = models.DateTimeField()
+	time_intervals = models.ForeignKey(TimeIntervals)
+
+# Update rate choices for "get" form
+class QueryDataForm(ModelForm):
+	class Meta:
+		model = QueryData
+		fields = ['date_time', 'time_intervals']
+
+
