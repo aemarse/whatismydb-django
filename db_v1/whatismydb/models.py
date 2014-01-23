@@ -31,13 +31,13 @@ class TimeIntervals(models.Model):
 	'Day',
 	)
 
-# Query choices for "get" form
+# Query choices for "get data" form
 class QueryData(models.Model):
 	start_time = models.DateTimeField('start_time')
 	end_time = models.DateTimeField('end_time')
 	time_intervals = models.ForeignKey(TimeIntervals)
 
-# Update rate choices for "get" form
+# Model for "get data" form
 class QueryDataForm(ModelForm):
 	class Meta:
 		model = QueryData

@@ -1,17 +1,24 @@
+{% load nvd3_tags %}
+<head>
+	{% include_chart_jscss %}
+    {% load_chart charttype chartdata chartcontainer extra %}
+</head>
+<body>
 <div id="container">
 
 <div id="viz_div" style="position:fixed; top:20px; left:10px">
-	<p>Put the visualization here</p>
+	<h1>What Is My dB?</h1>
+	{% include_container chartcontainer 400 450 %}
 </div>
 
-<div id="table_div" style="height:100px; overflow=auto; position:absolute; top:80px;">
-	{% if all_minute_data %}
+<div id="table_div" style="height:100px; overflow=auto; position:absolute; top:500px;">
+	{% if data_list %}
 		<table border="1">
 			<tr>
 				<th>Time</th>
 				<th>Value (db)</th>
 			</tr>
-			{% for objects in all_minute_data  %}
+			{% for objects in data_list  %}
 				<tr>
 				<td>{{ objects.time }}</td>
 				<td>{{ objects.value }}</td>
@@ -23,7 +30,7 @@
 	{% endif %}
 </div>
 
-<div id="form_div" style="position:absolute; top:20px; right:10px">
+<div id="form_div" style="position:absolute; top:45px; right:10px">
 	<form action="{% url 'whatismydb:home' %}" method="get">
 	<fieldset>
 
@@ -32,24 +39,25 @@
 	{% csrf_token %}
 
 	<label><b>Start Date/Time</b></label><br />
-	<input type="text" name="start_date"><br /><br />
+	<input type="text" name="start_time"><br /><br />
 
 	<label><b>End Date/Time</b></label><br />
-	<input type="text" name="end_date"><br /><br />
+	<input type="text" name="end_time"><br /><br />
 	
 	<label><b>Update Rate</b></label><br />
 	{% for choice in choices %}
 
-		<input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ forloop.counter }}">
+		<input type="radio" name="time_intervals" id="choice{{ forloop.counter }}" value="{{ choice }}">
 		<label for="choice{{ forloop.counter }}">{{ choice }}</label><br />
 
 	{% endfor %}
 	<br />
 
-	<input type="submit" value="Update" />
+	<input type="submit" value="Update Viz" />
 
 	</fieldset>
 	</form>
 </div>
 
 </div>
+</body>
