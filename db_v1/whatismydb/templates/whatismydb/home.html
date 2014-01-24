@@ -12,15 +12,15 @@
 </div>
 
 <div id="table_div" style="height:100px; overflow=auto; position:absolute; top:500px;">
-	{% if data_list %}
+	{% if date_time %}
 		<table border="1">
 			<tr>
 				<th>Time</th>
 				<th>Value (db)</th>
 			</tr>
-			{% for objects in data_list  %}
+			{% for objects in date_time  %}
 				<tr>
-				<td>{{ objects.time }}</td>
+				<td>{{ objects.timestamp }}</td>
 				<td>{{ objects.value }}</td>
 				</tr>
 			{% endfor %}
@@ -39,10 +39,10 @@
 	{% csrf_token %}
 
 	<label><b>Start Date/Time</b></label><br />
-	<input type="text" name="start_time"><br /><br />
+	<input type="text" name="start_time" value="{{ earliest }}"><br /><br />
 
 	<label><b>End Date/Time</b></label><br />
-	<input type="text" name="end_time"><br /><br />
+	<input type="text" name="end_time" value="{{ latest }}"><br /><br />
 	
 	<label><b>Update Rate</b></label><br />
 	{% for choice in choices %}

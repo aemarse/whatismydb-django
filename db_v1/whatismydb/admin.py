@@ -4,12 +4,12 @@ from whatismydb.models import MinuteData, HourData, DayData
 class TimeValueAdmin(admin.ModelAdmin):
 
 	fieldsets = [
-        ('Time', {'fields': ['time']}),
+        ('Timestamp', {'fields': ['timestamp']}),
         ('Value', {'fields': ['value']}),
     ]
 
-	list_display = ('time', 'value')
-	list_filter = ['time', 'value']
+	list_display = ('timestamp', 'value')
+	list_filter = ['timestamp', 'value']
 
 	class Meta:
 		abstract = True

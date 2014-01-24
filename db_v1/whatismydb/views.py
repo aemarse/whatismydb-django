@@ -1,4 +1,6 @@
 from django.shortcuts import render, get_list_or_404
+from datetime import datetime
+from time import mktime
 
 from whatismydb.models import MinuteData, HourData, DayData, TimeIntervals, QueryData
 
@@ -12,44 +14,52 @@ def home(request):
 		start_time = request.GET.get('start_time')
 		end_time = request.GET.get('end_time')
 
+		# Convert from DateTime to timestamp
+		# start_time = mktime(start_time.timetuple())+1e-6*start_time.microsecond
+		# end_time = mktime(end_time.timetuple())+1e-6*end_time.microsecond
+
 		# Get objects from the requested database table
 		if time_interval == 'Minute':
-			data_objects = MinuteData.objects.order_by('time')
+			data_objects = MinuteData.objects.order_by('timestamp')
 		elif time_interval == 'Hour':
-			data_objects = HourData.objects.order_by('time')
+			data_objects = HourData.objects.order_by('timestamp')
 		elif time_interval == 'Day':
-			data_objects = DayData.objects.order_by('time')
-
-		# Get the proper data for visualization and table
-		xdata = [1, 2, 3, 4, 5] # data_objects.values_list('time')
-		ydata = data_objects.values_list('value')
+			data_objects = DayData.objects.order_by('timestamp')
 
 	else:
 		# Add error message to form
 
-		# Display some data from the MinuteData table
-
-		# Queryset for getting all objects, ordered by time
-		data_objects = MinuteData.objects.order_by('time')[:10]
-
-		# Chart stuff -------------------
-		xdata = [1, 2, 3, 4, 5] # data_objects.values_list('time')
-		ydata = MinuteData.objects.all().values_list('value')
-
+		# Get some data from the MinuteData table
+		data_objects = MinuteData.objects.order_by('timestamp')[:10]
 
 	# Get the objects as a list
 	data_list = get_list_or_404(data_objects)
 
+	# Convert from Unix timestamp to DateTime format
+	date_time = getDateTime(data_list)
+
 	# Queryset for time intervals
 	time_interval_choices = TimeIntervals.time_interval_choices
+
+	# Earliest and latest data
+	earliest = datetime.fromtimestamp(data_objects[0].timestamp)
+	latest = datetime.fromtimestamp(data_objects[len(data_objects)-1].timestamp)
+
+	# Chart data
+	xdata = [1, 2, 3, 4, 5]
+	# ydata = [1, 2, 3, 4, 5]
+	# xdata = data_objects.values_list('timestamp')
+	ydata = data_objects.values_list('value')
 
 	chartdata = {'x': xdata, 'y': ydata}
 	charttype = "lineChart"
 	chartcontainer = 'linechart_container'
 
 	# Map template var name to Python obj
-	context = {'data_list': data_list,
+	context = {'date_time': date_time,
 				'choices': time_interval_choices,
+				'earliest': earliest,
+				'latest': latest,
 				'charttype': charttype,
     			'chartdata': chartdata,
     			'chartcontainer': chartcontainer,
@@ -64,3 +74,8 @@ def home(request):
 	# Render the page!
 	return render(request, 'whatismydb/home.html', context)
 
+# HELPER FUNCTIONS
+def getDateTime(data_list):
+	for index in range(len(data_list)):
+		data_list[index].timestamp = datetime.fromtimestamp(data_list[index].timestamp)
+	return data_list

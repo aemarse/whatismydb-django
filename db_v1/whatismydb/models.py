@@ -3,14 +3,14 @@ from django.forms import ModelForm
 
 # Abstract base class for representing time+value in database
 class TimeValue(models.Model):
-	time = models.DateTimeField('date/time recorded')
+	timestamp = models.FloatField()
 	value = models.FloatField()
 
 	class Meta:
 		abstract = True
 
 	def __unicode__(self):
-		return u'\nValue: %s \nTime: %s\n' % (self.value, self.time)
+		return u'\nValue: %s \nTime: %s\n' % (self.value, self.timestamp)
 
 # Represents data collected every minute, subclass of TimeValue
 class MinuteData(TimeValue):
