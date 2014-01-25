@@ -4,9 +4,16 @@ from django.views.decorators.csrf import csrf_exempt
 
 from datetime import datetime
 from time import mktime
+import json
 
 from whatismydb.models import MinuteData, HourData, DayData, TimeIntervals, QueryData
 
+# Globals for database table mapping
+MINUTE = 'minute'
+HOUR = 'hour'
+DAY = 'day'
+
+# Home page
 def home(request):
 
 	# Make sure "Get Data" form parameters are set
@@ -49,9 +56,9 @@ def home(request):
 	latest = datetime.fromtimestamp(data_objects[len(data_objects)-1].timestamp)
 
 	# Chart data
-	xdata = [1, 2, 3, 4, 5]
+	# xdata = [1, 2, 3, 4, 5]
 	# ydata = [1, 2, 3, 4, 5]
-	# xdata = data_objects.values_list('timestamp')
+	xdata = data_objects.values_list('timestamp')
 	ydata = data_objects.values_list('value')
 
 	chartdata = {'x': xdata, 'y': ydata}
@@ -77,27 +84,59 @@ def home(request):
 	# Render the page!
 	return render(request, 'whatismydb/home.html', context)
 
+# HTTP poster
 @csrf_exempt
 def poster(request):
 
 	# Make sure "Get Data" form parameters are set
-	# if request.POST.get('timestamp') and request.POST.get('value'):
 	if request.method == 'POST':
-		# POST parameters from the request
-		# timestamp = request.GET.get('timestamp')
-		# value = request.GET.get('value')
 
-		# resp = "Response: " + timestamp + value
+		# Get the body of the HTTP request (our JSON string)
+		request_body = request.body
 
-		out = request.body
-		print 'Raw Data: "%s"' % out
+		# Load the JSON string and get our values
+		json_str = json.loads(request_body)
+		timestamp = json_str['timestamp']
+		value = json_str['value']
+		db_table = json_str['dbTable']
 
-		return HttpResponse(out)
+		# Print to make sure its working 
+		print '\n' + 'JSON' + '\n' + json.dumps(json_str, sort_keys=True, indent=4) + '\n'
+		print 'VALUES'
+		print 'timestamp:' + timestamp
+		print 'value: ' + value 
+		print 'db_table: ' + db_table + '\n'
+
+		# Add values to the appropriate table
+		if db_table == MINUTE:
+			# Instantiate a MinuteData object
+			table_obj = MinuteData(timestamp=timestamp, value=value)
+			print '\nMinuteData object added\n'
+			# print table_obj
+
+		elif db_table == HOUR:
+			# Instantiate a HourData object
+			table_obj = HourData(timestamp=timestamp, value=value)
+			print '\nHourData object added\n'
+			# print table_obj
+
+		elif db_table == DAY:
+			# Instantiate a DayData object
+			table_obj = DayData(timestamp=timestamp, value=value)
+			print '\nDayData object added\n'
+			# print table_obj
+
+		# Save the object to the database
+		table_obj.save()
+
+		# Return an empty response
+		return HttpResponse("Succesfully added object to database")
+	
 	else:
 
-		print "No response"
-
-		return HttpResponse("No response")
+		# Print and return response
+		print "Something went wrong with POST"
+		return HttpResponse("Something went wrong with POST")
 
 # HELPER FUNCTIONS
 def getDateTime(data_list):
