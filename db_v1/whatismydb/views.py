@@ -1,4 +1,7 @@
 from django.shortcuts import render, get_list_or_404
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+
 from datetime import datetime
 from time import mktime
 
@@ -73,6 +76,28 @@ def home(request):
 
 	# Render the page!
 	return render(request, 'whatismydb/home.html', context)
+
+@csrf_exempt
+def poster(request):
+
+	# Make sure "Get Data" form parameters are set
+	# if request.POST.get('timestamp') and request.POST.get('value'):
+	if request.method == 'POST':
+		# POST parameters from the request
+		# timestamp = request.GET.get('timestamp')
+		# value = request.GET.get('value')
+
+		# resp = "Response: " + timestamp + value
+
+		out = request.body
+		print 'Raw Data: "%s"' % out
+
+		return HttpResponse(out)
+	else:
+
+		print "No response"
+
+		return HttpResponse("No response")
 
 # HELPER FUNCTIONS
 def getDateTime(data_list):
