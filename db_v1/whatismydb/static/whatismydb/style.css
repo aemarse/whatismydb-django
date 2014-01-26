@@ -1,0 +1,39 @@
+body { 
+	font-family: Helvetica;
+}
+
+.layoutholder{ 
+	margin-left: auto;
+	margin-right: auto; 
+	width:1264px
+}
+
+.header_div{ 
+	width:960px; 
+	height:100px;
+}
+
+.mainholder{ 
+	width:750px;
+}
+
+.viz_div{ 
+	width:100%; 
+	/*background-color:Red;  */
+	height:500px; 
+	float:left;
+}
+
+.table_div{ 
+	width:50%; 
+	/*background-color:Blue; */
+	float:left; 
+	height:300px; 
+}
+
+.form_div{ 
+	width:50%; 
+	/*background-color:purple; */
+	float:left; 
+	height:300px; 
+}

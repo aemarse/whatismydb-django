@@ -2,16 +2,24 @@
 <head>
 	{% include_chart_jscss %}
     {% load_chart charttype chartdata chartcontainer extra %}
+    <!-- <link href="style.css" rel="stylesheet" type="text/css" /> -->
 </head>
 <body>
-<div id="container">
 
-<div id="viz_div" style="position:fixed; top:20px; left:10px">
-	<h1>What Is My dB?</h1>
-	{% include_container chartcontainer 400 450 %}
+<div class="layoutholder" style="margin-left: auto;
+	margin-right: auto; 
+	width:1264px; height:1264px;">
+
+<div class="header_div" style = "width:100%; height:50px;">
+	<center><h1>What Is My dB?</h1></center>
 </div>
 
-<div id="table_div" style="height:100px; overflow=auto; position:absolute; top:500px;">
+<div class="viz_div" style="width:100%; height:500px; float:center;">
+	<center>{% include_container chartcontainer 500 1150 %}</center>
+</div>
+
+<div id="table_div" style="width:50%; float:left; height:500px;">
+	<center>
 	{% if date_time %}
 		<table border="1">
 			<tr>
@@ -28,11 +36,14 @@
 	{% else %}
 		<p>There is no data to display, sorry.</p>
 	{% endif %}
+	</center>
 </div>
 
-<div id="form_div" style="position:absolute; top:45px; right:10px">
+<div id="form_div" style="width:50%; float:left; height:500px;">
+	<div id="form">
 	<form action="{% url 'whatismydb:home' %}" method="get">
-	<fieldset>
+	<center>
+	<fieldset style="display:inline-block;">
 
 	<legend>Get Data</legend>
 	
@@ -56,8 +67,12 @@
 	<input type="submit" value="Update Viz" />
 
 	</fieldset>
+	</center>
 	</form>
+	</div>
+	</center>
 </div>
 
 </div>
+
 </body>
