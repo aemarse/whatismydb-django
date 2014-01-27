@@ -2,11 +2,10 @@ from django.shortcuts import render, get_list_or_404
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
-import datetime
 from datetime import datetime
 import time
 import json
-import random
+from time import mktime
 
 from whatismydb.models import MinuteData, HourData, DayData, TimeIntervals, QueryData
 
@@ -29,6 +28,9 @@ def home(request):
 		# Convert from DateTime to timestamp
 		# start_time = mktime(start_time.timetuple())+1e-6*start_time.microsecond
 		# end_time = mktime(end_time.timetuple())+1e-6*end_time.microsecond
+
+		print start_time
+		print end_time		
 
 		# Get objects from the requested database table
 		if time_interval == 'Minute':
