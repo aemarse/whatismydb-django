@@ -8,6 +8,7 @@ import json
 from time import mktime
 
 from whatismydb.models import MinuteData, HourData, DayData, TimeIntervals, QueryData
+from whatismydb.forms import GetDataForm
 
 # Globals for database table mapping
 MINUTE = 'minute'
@@ -17,20 +18,33 @@ DAY = 'day'
 # Home page
 def home(request):
 
+	# Initialize the form
+	form = GetDataForm()
+
 	# Make sure "Get Data" form parameters are set
-	if request.GET.get('start_time') and request.GET.get('end_time') and request.GET.get('time_intervals'):
-		
-		# GET parameters from the request
-		time_interval = request.GET.get('time_intervals')
+	# if request.GET.get('start_time') and request.GET.get('end_time') and request.GET.get('time_intervals'):
+	if request.GET.get('update_rate'):
+
+		time_interval = request.GET.get('update_rate')
 		start_time = request.GET.get('start_time')
 		end_time = request.GET.get('end_time')
 
+		print start_time
+		print end_time
+
+		# GET parameters from the request
+		# time_interval = request.GET.get('time_intervals')
+		# start_time = request.GET.get('start_time')
+		# end_time = request.GET.get('end_time')
+
 		# Convert from DateTime to timestamp
+		# start_time = datetime.strptime(start_time, "%m/%d/%y %H:%M").time()
+		# end_time = datetime.strptime(end_time, "%m/%d/%y %H:%M").time()
 		# start_time = mktime(start_time.timetuple())+1e-6*start_time.microsecond
 		# end_time = mktime(end_time.timetuple())+1e-6*end_time.microsecond
 
-		print start_time
-		print end_time		
+		# print start_time
+		# print end_time		
 
 		# Get objects from the requested database table
 		if time_interval == 'Minute':
@@ -85,6 +99,7 @@ def home(request):
 				'choices': time_interval_choices,
 				'earliest': earliest,
 				'latest': latest,
+				'form': form,
 				'charttype': charttype,
     			'chartdata': chartdata,
     			'chartcontainer': chartcontainer,
@@ -97,6 +112,7 @@ def home(request):
         	}
 
 	# Render the page!
+	print "rendering"
 	return render(request, 'whatismydb/home.html', context)
 
 # HTTP poster

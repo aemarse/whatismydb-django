@@ -40,7 +40,30 @@
 </div>
 
 <div id="form_div" style="width:50%; float:left; height:45%;">
-	<div id="form">
+	<form action="{% url 'whatismydb:home' %}" method="get">
+	<center>
+	<fieldset style="display:inline-block;">
+	<legend>Get Data</legend>
+	{% csrf_token %}
+
+	<label><b>Start Date/Time </b></label>
+	<input type="text" name="start_time" value="{{ earliest }}"><br /><br />
+
+	<label><b>End Date/Time </b></label>
+	<input type="text" name="end_time" value="{{ latest }}"><br /><br />
+
+	<label><b>Update Rate</b></label><br />
+	{% for choice in form.fields.update_rate.choices %}
+
+		<input type="radio" name="update_rate" id="choice{{ forloop.counter }}" value="{{ choice }}">
+		<label for="choice{{ forloop.counter }}">{{ choice }}</label><br />
+
+	{% endfor %}
+
+	<br />
+	<input type="submit" value="Update Viz" />
+
+	<!-- <div id="form">
 	<form action="{% url 'whatismydb:home' %}" method="get">
 	<center>
 	<fieldset style="display:inline-block;">
@@ -68,9 +91,11 @@
 
 	</fieldset>
 	</center>
+	</form> -->
+	</fieldset>
+	</center>
 	</form>
 	</div>
-	</center>
 </div>
 
 </div>
