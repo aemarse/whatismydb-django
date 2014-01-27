@@ -1,24 +1,24 @@
 {% load nvd3_tags %}
 <head>
 	{% include_chart_jscss %}
-    {% load_chart charttype chartdata chartcontainer extra %}
+    {% load_chart charttype chartdata "linewithfocuschart_container" extra %}
     <!-- <link href="style.css" rel="stylesheet" type="text/css" /> -->
 </head>
 <body>
 
 <div class="layoutholder" style="margin-left: auto;
 	margin-right: auto; 
-	width:1264px; height:1264px;">
+	width:1200px; height:1200px;">
 
-<div class="header_div" style = "width:100%; height:50px;">
+<div class="header_div" style = "width:100%; height:5%; padding-top:5px;">
 	<center><h1>What Is My dB?</h1></center>
 </div>
 
-<div class="viz_div" style="width:100%; height:500px; float:center;">
-	<center>{% include_container chartcontainer 500 1150 %}</center>
+<div class="viz_div" style="width:100%; height:45%; float:center;">
+	<center>{% include_container chartcontainer '90%' '95%' %}</center>
 </div>
 
-<div id="table_div" style="width:50%; float:left; height:500px;">
+<div id="table_div" style="width:50%; float:left; height:45%;">
 	<center>
 	{% if date_time %}
 		<table border="1">
@@ -39,7 +39,7 @@
 	</center>
 </div>
 
-<div id="form_div" style="width:50%; float:left; height:500px;">
+<div id="form_div" style="width:50%; float:left; height:45%;">
 	<div id="form">
 	<form action="{% url 'whatismydb:home' %}" method="get">
 	<center>

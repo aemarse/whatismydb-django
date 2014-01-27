@@ -2,9 +2,11 @@ from django.shortcuts import render, get_list_or_404
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
+import datetime
 from datetime import datetime
-from time import mktime
+import time
 import json
+import random
 
 from whatismydb.models import MinuteData, HourData, DayData, TimeIntervals, QueryData
 
@@ -44,9 +46,11 @@ def home(request):
 
 	# Get the objects as a list
 	data_list = get_list_or_404(data_objects)
+	# print data_list
 
 	# Convert from Unix timestamp to DateTime format
-	date_time = getDateTime(data_list)
+	date_time = get_datetime_from_list(data_list)
+	# print date_time
 
 	# Queryset for time intervals
 	time_interval_choices = TimeIntervals.time_interval_choices
@@ -55,15 +59,24 @@ def home(request):
 	earliest = datetime.fromtimestamp(data_objects[0].timestamp)
 	latest = datetime.fromtimestamp(data_objects[len(data_objects)-1].timestamp)
 
-	# Chart data
-	# xdata = [1, 2, 3, 4, 5]
-	# ydata = [1, 2, 3, 4, 5]
+	# Get the data series to plot
 	xdata = data_objects.values_list('timestamp')
 	ydata = data_objects.values_list('value')
 
-	chartdata = {'x': xdata, 'y': ydata}
-	charttype = "lineChart"
-	chartcontainer = 'linechart_container'
+	# FOCUSABLE LINE CHART
+
+	# Get a list of ints from the list of tuples
+	xD = [int(i[0])*1000 for i in xdata]
+	yD = [int(i[0]) for i in ydata] 
+
+	chartcontainer = "linewithfocuschart_container"
+
+	chartdata = {
+        'x': xD,
+        'name1': 'series 1', 'y1': yD,
+    }
+
+	charttype = "lineWithFocusChart"
 
 	# Map template var name to Python obj
 	context = {'date_time': date_time,
@@ -74,8 +87,8 @@ def home(request):
     			'chartdata': chartdata,
     			'chartcontainer': chartcontainer,
     			'extra': {
-        			'x_is_date': False,
-        			'x_axis_format': '',
+        			'x_is_date': True,
+        			'x_axis_format': "%m/%d %H:%M",
         			'tag_script_js': True,
         			'jquery_on_ready': False,
         		}
@@ -101,7 +114,7 @@ def poster(request):
 		db_table = json_str['dbTable']
 
 		# Print to make sure its working 
-		print '\n' + 'JSON' + '\n' + json.dumps(json_str, sort_keys=True, indent=4) + '\n'
+		# print '\n' + 'JSON' + '\n' + json.dumps(json_str, sort_keys=True, indent=4) + '\n'
 		print 'VALUES'
 		print 'timestamp:' + timestamp
 		print 'value: ' + value 
@@ -109,22 +122,25 @@ def poster(request):
 
 		# Add values to the appropriate table
 		if db_table == MINUTE:
+			
 			# Instantiate a MinuteData object
 			table_obj = MinuteData(timestamp=timestamp, value=value)
+			
 			print '\nMinuteData object added\n'
-			# print table_obj
 
 		elif db_table == HOUR:
+			
 			# Instantiate a HourData object
 			table_obj = HourData(timestamp=timestamp, value=value)
+			
 			print '\nHourData object added\n'
-			# print table_obj
 
 		elif db_table == DAY:
+			
 			# Instantiate a DayData object
 			table_obj = DayData(timestamp=timestamp, value=value)
+			
 			print '\nDayData object added\n'
-			# print table_obj
 
 		# Save the object to the database
 		table_obj.save()
@@ -138,8 +154,19 @@ def poster(request):
 		print "Something went wrong with POST"
 		return HttpResponse("Something went wrong with POST")
 
+
 # HELPER FUNCTIONS
-def getDateTime(data_list):
+def datetime_from_timestamp(data_objects):
+
+	datetimes = []
+
+	for index in range(len(data_objects)):
+		datetimes.append((datetime.fromtimestamp(data_objects[index].timestamp).strftime("%m/%d/%y %H:%M:%S")))
+		# print datetimes[index]
+
+	return datetimes
+
+def get_datetime_from_list(data_list):
 	for index in range(len(data_list)):
 		data_list[index].timestamp = datetime.fromtimestamp(data_list[index].timestamp)
 	return data_list
