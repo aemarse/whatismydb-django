@@ -15,25 +15,16 @@ MINUTE = 'minute'
 HOUR = 'hour'
 DAY = 'day'
 
-# Home page
+# Home page view function
 def home(request):
 
 	# Initialize the form
 	form = GetDataForm()
 
 	# Make sure "Get Data" form parameters are set
-	# if request.GET.get('start_time') and request.GET.get('end_time') and request.GET.get('time_intervals'):
 	if request.GET.get('update_rate'):
 
 		time_interval = request.GET.get('update_rate')
-		start_time = request.GET.get('start_time')
-		end_time = request.GET.get('end_time')
-
-		print start_time
-		print end_time
-
-		# GET parameters from the request
-		# time_interval = request.GET.get('time_intervals')
 		# start_time = request.GET.get('start_time')
 		# end_time = request.GET.get('end_time')
 
@@ -41,10 +32,7 @@ def home(request):
 		# start_time = datetime.strptime(start_time, "%m/%d/%y %H:%M").time()
 		# end_time = datetime.strptime(end_time, "%m/%d/%y %H:%M").time()
 		# start_time = mktime(start_time.timetuple())+1e-6*start_time.microsecond
-		# end_time = mktime(end_time.timetuple())+1e-6*end_time.microsecond
-
-		# print start_time
-		# print end_time		
+		# end_time = mktime(end_time.timetuple())+1e-6*end_time.microsecond	
 
 		# Get objects from the requested database table
 		if time_interval == 'Minute':
@@ -55,18 +43,14 @@ def home(request):
 			data_objects = DayData.objects.order_by('timestamp')
 
 	else:
-		# Add error message to form
-
-		# Get some data from the MinuteData table
-		data_objects = MinuteData.objects.order_by('timestamp')[:10]
+		# Just get some data from the MinuteData table
+		data_objects = MinuteData.objects.order_by('timestamp')
 
 	# Get the objects as a list
 	data_list = get_list_or_404(data_objects)
-	# print data_list
 
 	# Convert from Unix timestamp to DateTime format
 	date_time = get_datetime_from_list(data_list)
-	# print date_time
 
 	# Queryset for time intervals
 	time_interval_choices = TimeIntervals.time_interval_choices
@@ -94,7 +78,7 @@ def home(request):
 
 	charttype = "lineWithFocusChart"
 
-	# Map template var name to Python obj
+	# Map template var names to Python objs
 	context = {'date_time': date_time,
 				'choices': time_interval_choices,
 				'earliest': earliest,
@@ -112,14 +96,13 @@ def home(request):
         	}
 
 	# Render the page!
-	print "rendering"
 	return render(request, 'whatismydb/home.html', context)
 
 # HTTP poster
 @csrf_exempt
 def poster(request):
 
-	# Make sure "Get Data" form parameters are set
+	# Make sure request method is POST
 	if request.method == 'POST':
 
 		# Get the body of the HTTP request (our JSON string)
@@ -131,8 +114,7 @@ def poster(request):
 		value = json_str['value']
 		db_table = json_str['dbTable']
 
-		# Print to make sure its working 
-		# print '\n' + 'JSON' + '\n' + json.dumps(json_str, sort_keys=True, indent=4) + '\n'
+		# Print values 
 		print 'VALUES'
 		print 'timestamp:' + timestamp
 		print 'value: ' + value 

@@ -18,20 +18,24 @@
 	<center>{% include_container chartcontainer '90%' '95%' %}</center>
 </div>
 
-<div id="table_div" style="width:50%; float:left; height:45%;">
+<div id="table_div" style="width:50%; float:left; height:500px; overflow:auto;">
 	<center>
 	{% if date_time %}
 		<table border="1">
-			<tr>
-				<th>Time</th>
-				<th>Value (db)</th>
-			</tr>
+			<thead>
+				<tr>
+					<th>Time</th>
+					<th>Value (db)</th>
+				</tr>
+			</thead>
+			<tbody style="height:100px; overflow:auto;">
 			{% for objects in date_time  %}
 				<tr>
 				<td>{{ objects.timestamp }}</td>
 				<td>{{ objects.value }}</td>
 				</tr>
 			{% endfor %}
+			</tbody>
 		</table>
 	{% else %}
 		<p>There is no data to display, sorry.</p>
@@ -39,7 +43,7 @@
 	</center>
 </div>
 
-<div id="form_div" style="width:50%; float:left; height:45%;">
+<div id="form_div" style="width:50%; float:left; height:500px;">
 	<form action="{% url 'whatismydb:home' %}" method="get">
 	<center>
 	<fieldset style="display:inline-block;">
@@ -62,36 +66,7 @@
 
 	<br />
 	<input type="submit" value="Update Viz" />
-
-	<!-- <div id="form">
-	<form action="{% url 'whatismydb:home' %}" method="get">
-	<center>
-	<fieldset style="display:inline-block;">
-
-	<legend>Get Data</legend>
 	
-	{% csrf_token %}
-
-	<label><b>Start Date/Time</b></label><br />
-	<input type="text" name="start_time" value="{{ earliest }}"><br /><br />
-
-	<label><b>End Date/Time</b></label><br />
-	<input type="text" name="end_time" value="{{ latest }}"><br /><br />
-	
-	<label><b>Update Rate</b></label><br />
-	{% for choice in choices %}
-
-		<input type="radio" name="time_intervals" id="choice{{ forloop.counter }}" value="{{ choice }}">
-		<label for="choice{{ forloop.counter }}">{{ choice }}</label><br />
-
-	{% endfor %}
-	<br />
-
-	<input type="submit" value="Update Viz" />
-
-	</fieldset>
-	</center>
-	</form> -->
 	</fieldset>
 	</center>
 	</form>
